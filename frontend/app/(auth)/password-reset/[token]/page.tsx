@@ -1,112 +1,125 @@
 'use client'
 
-import Button from '@/components/Button'
 import Input from '@/components/Input'
-import InputError from '@/components/InputError'
 import Label from '@/components/Label'
 import { useAuth } from '@/hooks/auth'
-import { useEffect, useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button } from '@/components/ui/button'
 import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
 
+const passwordResetSchema = z
+  .object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+    passwordConfirmation: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Passwords must match',
+    path: ['passwordConfirmation'],
+  })
+
+type PasswordResetFormValues = z.infer<typeof passwordResetSchema>
+
 const PasswordReset = () => {
-    const searchParams = useSearchParams()
+  const searchParams = useSearchParams()
+  const { resetPassword } = useAuth({ middleware: 'guest' })
 
-    const { resetPassword } = useAuth({ middleware: 'guest' })
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<PasswordResetFormValues>({
+    resolver: zodResolver(passwordResetSchema),
+  })
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
+  const onSubmit = (data: PasswordResetFormValues) => {
+    resetPassword({
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.passwordConfirmation,
+      setErrors: () => {}, // Handle errors as needed
+      setStatus: () => {}, // Handle status as needed
+    })
+  }
 
-    const submitForm = (event:any) => {
-        event.preventDefault()
-
-        resetPassword({
-            email,
-            password,
-            password_confirmation: passwordConfirmation,
-            setErrors,
-            setStatus,
-        })
+  useEffect(() => {
+    const email = searchParams.get('email')
+    if (email) {
+      setValue('email', email)
     }
+  }, [searchParams, setValue])
 
-    useEffect(() => {
-        // @ts-ignore
-        setEmail(searchParams.get('email'))
-    }, [searchParams.get('email')])
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      <div className="w-full max-w-md p-6 bg-black rounded shadow-md shadow-gray-500">
+        <h2 className="text-xl font-semibold text-center mb-4">Reset Password</h2>
 
-    return (
-        <>
-            {/* Session Status */}
-            <AuthSessionStatus className="mb-4" status={status} />
+        {/* Session Status */}
+        <AuthSessionStatus className="mb-4" status={null} />
 
-            <form onSubmit={submitForm}>
-                {/* Email Address */}
-                <div>
-                    <Label htmlFor="email">Email</Label>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Email Address */}
+          <div className="mb-4">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              className="block mt-1 w-full px-3 py-2 border rounded-md bg-black text-white"
+              placeholder="Enter your email"
+              {...register('email')}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
+          </div>
 
-                    <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        className="block mt-1 w-full"
-                        onChange={(event:any) => setEmail(event.target.value)}
-                        required
-                        autoFocus
-                    />
+          {/* Password */}
+          <div className="mb-4">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              className="block mt-1 w-full px-3 py-2 border rounded-md bg-black text-white"
+              placeholder="Enter your new password"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
+          </div>
 
-                    <InputError messages={errors.email} className="mt-2" />
-                </div>
+          {/* Confirm Password */}
+          <div className="mb-4">
+            <Label htmlFor="passwordConfirmation">Confirm Password</Label>
+            <Input
+              id="passwordConfirmation"
+              type="password"
+              className="block mt-1 w-full px-3 py-2 border rounded-md bg-black text-white"
+              placeholder="Confirm your new password"
+              {...register('passwordConfirmation')}
+            />
+            {errors.passwordConfirmation && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.passwordConfirmation.message}
+              </p>
+            )}
+          </div>
 
-                {/* Password */}
-                <div className="mt-4">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        className="block mt-1 w-full"
-                        onChange={(event:any) => setPassword(event.target.value)}
-                        required
-                    />
-
-                    <InputError
-                        messages={errors.password}
-                        className="mt-2"
-                    />
-                </div>
-
-                {/* Confirm Password */}
-                <div className="mt-4">
-                    <Label htmlFor="passwordConfirmation">
-                        Confirm Password
-                    </Label>
-
-                    <Input
-                        id="passwordConfirmation"
-                        type="password"
-                        value={passwordConfirmation}
-                        className="block mt-1 w-full"
-                        onChange={(event:any) =>
-                            setPasswordConfirmation(event.target.value)
-                        }
-                        required
-                    />
-
-                    <InputError
-                        messages={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Button>Reset Password</Button>
-                </div>
-            </form>
-        </>
-    )
+          {/* Submit Button */}
+          <div className="flex items-center justify-end mt-4">
+            <Button type="submit" className="px-4 py-2 text-white bg-indigo-600 rounded-md">
+              Reset Password
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
 }
 
 export default PasswordReset

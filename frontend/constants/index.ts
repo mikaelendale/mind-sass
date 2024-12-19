@@ -109,3 +109,30 @@ export const files = [
     body: "A seed phrase, seed recovery phrase or backup seed phrase is a list of words which store all the information needed to recover Bitcoin funds on-chain.",
   },
 ];
+
+export const logos = [
+  {
+    name: "Study Table",
+    img: "https://i.pinimg.com/736x/c8/ab/ab/c8abab3f9313415364428ca5e9473010.jpg",
+  },
+  {
+    name: "Flashcard",
+    img: "https://i.pinimg.com/736x/9c/20/80/9c2080dc11183e587f24e697067d3caf.jpg",
+  },
+  {
+    name: "Podcast",
+    img: "https://i.pinimg.com/736x/23/07/ab/2307ab89760cce73c0a2d0ab0e531b9b.jpg",
+  },
+  {
+    name: "Mindmaps",
+    img: "https://i.pinimg.com/736x/38/75/08/38750813f2aef1df10e7610bb161a90f.jpg",
+  },
+  {
+    name: "Group of Students",
+    img: "https://i.pinimg.com/736x/35/35/f5/3535f5a8e58850700c5af7e1b187c579.jpg",
+  },
+  {
+    name: "Study",
+    img: "https://i.pinimg.com/736x/57/ea/ac/57eaacf02b2dba3da42f497995c721ba.jpg",
+  },
+];

@@ -10,9 +10,13 @@ import { avatars, userNum } from '@/constants';
 import Safari from '../ui/safari';
 import { MarqueeDemo } from './Trusted';
 import { Features } from './Features';
+import NavBar from './NavBar';
+import Link from 'next/link';
 
 const LandingPage = () => {
   return (
+    <>
+    <NavBar/>    
     <section>
         <div className="relative flex h-[500px] mt-10 w-full px-3 gap-[5rem] items-center overflow-hidden rounded-lg  ">
         <div className=' flex-wrap w-[50%] flex flex-col gap-8'>
@@ -21,18 +25,22 @@ const LandingPage = () => {
             </p>
             <p className='text-xl px-3 mx-auto'>Generate flashcards, mind maps, practice questions, and podcasts from your study materials in seconds. Supercharge your learning with StudMind.ai</p>
             <div className='mt-4 flex gap-6 px-3'>
-                <Button
-                    type="button"
-                    className="bg-purple-gradient bg-cover capitalize rounded-full text-xl py-[1.5rem] px-[2rem]"
-                >
-                    Get Started
-                </Button>
-                <Button
-                    type="button"
-                    className="bg-black-gradient bg-cover capitalize rounded-full text-xl py-[1.5rem] px-[2rem]"
-                >
-                   Explore Features
-                </Button>
+                <Link href='/login'>
+                  <Button
+                      type="button"
+                      className="bg-purple-gradient bg-cover capitalize rounded-full text-xl py-[1.5rem] px-[2rem]"
+                  >
+                      Get Started
+                  </Button>
+                </Link>
+                <Link href='#features'>
+                  <Button
+                      type="button"
+                      className="bg-black-gradient bg-cover capitalize rounded-full text-xl py-[1.5rem] px-[2rem]"
+                  >
+                     Explore Features
+                  </Button>
+                </Link>
             </div>
             <div className='mt-4 flex gap-3 pl-4 items-center'>
                 <p className='text-xl'>Trusted by over {userNum}+ Students</p>
@@ -86,11 +94,12 @@ const LandingPage = () => {
               <p className=' text-5xl font-bold'>Everything You Need to Ace Your Learning Journey</p>
               <p className=' text-xl'>Discover the tools that make studying smarter, faster, and more engaging</p>
           </div>
-          <div className='relative px-6'>
+          <div className='relative px-6' id='features'>
             <Features/>
           </div>
         </div>
     </section>
+    </>
   )
 }
 
