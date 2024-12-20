@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
@@ -6,6 +7,8 @@ import { useParams, useRouter } from 'next/navigation'
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
     const params = useParams()
+
+    const isDev = process.env.NODE_ENV === 'development';
 
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
@@ -17,6 +20,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 router.push('/verify-email')
             }),
     )
+
+    const mockUser = { id: 1, name: 'Dev User', email: 'dev@example.com' }
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
@@ -100,22 +105,22 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user)
+        if (middleware === 'guest' && redirectIfAuthenticated && (isDev ? mockUser : user))
             router.push(redirectIfAuthenticated)
 
-        if (middleware === 'auth' && !user?.email_verified_at)
+        if (middleware === 'auth' && !isDev && !user?.email_verified_at)
             router.push('/verify-email')
         
         if (
             window.location.pathname === '/verify-email' &&
-            user?.email_verified_at
+            (isDev ? mockUser.email_verified_at : user?.email_verified_at)
         )
             router.push(redirectIfAuthenticated)
         if (middleware === 'auth' && error) logout()
     }, [user, error])
 
     return {
-        user,
+        user: isDev ? mockUser : user,
         register,
         login,
         forgotPassword,
