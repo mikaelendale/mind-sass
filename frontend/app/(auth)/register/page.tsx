@@ -54,16 +54,23 @@ const Register = () => {
       {/* Left Column */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
         <div className="max-w-md w-full">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-center">
-              <Image
-                alt="logo"
-                src="/assets/images/studimg-black.png"
-                width={300}
-                height={300}
-              />
+          <div className="flex flex-col gap-2 items-center justify-center text-center">
+            <Image
+              alt="logo"
+              src="/assets/images/studimg-black.png"
+              width={300}
+              height={300}
+              className="mb-[-3rem]"
+            />
+            <div className="pb-[3rem]">
+              <h1 className="text-2xl font-bold text-white">Create an account</h1>
+              <p className="text-balance text-sm text-muted-foreground text-white">
+                Fill in the details below to register your account
+              </p>
             </div>
+          </div>
 
+          <form onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
             <div className="mt-[-3rem] gap-3 flex flex-col">
               <Label htmlFor="name">Name</Label>
@@ -133,19 +140,34 @@ const Register = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-end mt-4">
-              <Link
-                href="/login"
-                className="underline text-sm hover:text-gray-300"
-              >
-                Already registered?
-              </Link>
+            <div className="flex items-center justify-center mt-4">
               <Button
-                className="ml-3 mind-button px-[2rem] py-2 text-md rounded-sm"
+                className="ml-3 mind-button px-[2rem] py-2 w-full text-md rounded-sm"
                 type="submit"
               >
                 Register
               </Button>
+            </div>
+            <div className="relative my-1 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              <span className="relative z-10 bg-black text-white px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <Button className="w-full rounded-md">
+                Signup with Google
+              </Button>
+              <Button className="w-full rounded-md">
+                Signup with GitHub
+              </Button>
+            </div>
+            <div className="text-center mt-4">
+              <Link
+                href="/login"
+                className="underline text-sm hover:text-gray-300"
+              >
+                Already registered? Login here.
+              </Link>
             </div>
           </form>
         </div>
