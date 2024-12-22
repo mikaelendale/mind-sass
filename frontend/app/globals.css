@@ -353,7 +353,7 @@ html {
   }
 
   .header-nav_elements {
-    @apply mt-8 flex w-full flex-col items-start gap-5;
+    @apply  flex w-full flex-col items-start gap-3;
   }
 
   /* Search Component */

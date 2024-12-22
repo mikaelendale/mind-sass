@@ -13,7 +13,7 @@ const MobileNav = () => {
   const pathname = usePathname();
 
   return (
-    <header className="header bg-background w-full">
+    <header className="header bg-black text-white w-full">
       <Link href="/" className="flex items-center gap-2 md:py-2">
         <Image
           src="/assets/images/studmind.svg"
@@ -39,7 +39,7 @@ const MobileNav = () => {
             <SheetContent className="sheet-content sm:w-64">
               <>
                 <Image 
-                  src="/assets/images/studmind.svg"
+                  src="/assets/images/studimg-black.png"
                   alt="logo"
                   width={152}
                   height={23}
@@ -51,7 +51,7 @@ const MobileNav = () => {
 
                 return (
                   <li 
-                    className={`${isActive && 'gradient-text'}  flex whitespace-nowrap text-dark-700`}
+                    className={`${isActive && 'gradient-text'}  flex whitespace-nowrap `}
                     key={link.href}
                     >
                     <Link className="sidebar-link cursor-pointer" href={link.href}>
