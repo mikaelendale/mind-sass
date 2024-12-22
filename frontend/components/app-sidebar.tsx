@@ -17,7 +17,7 @@ import {
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+// import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +25,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import Image from "next/image"
 
 // This is sample data.
 const data = {
@@ -52,7 +53,7 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Spaces",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
@@ -139,17 +140,17 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Essay Writer",
       url: "#",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
+      name: "AI Humanizer",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Study Guide",
       url: "#",
       icon: Map,
     },
@@ -158,11 +159,14 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} >
+    <Sidebar collapsible="icon" {...props} className=" hover:bg-none hover:text-white">
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        {/* <TeamSwitcher teams={data.teams} /> */}
+        <div className=" relative w-full h-[150px] overflow-hidden">
+          <Image src='/assets/images/studimg-black.png' alt="logo"   layout="fill" className=" absolute" />
+        </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-[-3rem]">
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>

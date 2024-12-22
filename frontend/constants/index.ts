@@ -136,3 +136,28 @@ export const logos = [
     img: "https://i.pinimg.com/736x/57/ea/ac/57eaacf02b2dba3da42f497995c721ba.jpg",
   },
 ];
+
+export const featureLinks = [
+  {
+    name:'Flashcard',
+    img: '/assets/icons/flash.png',
+    url:'/'
+  },
+  {
+    name: 'Mindmaps',
+    img: '/assets/icons/mind.png',
+    url:'/'
+  },
+  {
+    name: 'Mock Exams',
+    img: '/assets/icons/exam.png',
+    url:'/',
+    msg: 'Comming Soon...'
+  },
+  {
+    name: 'Podcast',
+    img: '/assets/icons/podcast.png',
+    url:'/',
+    msg: 'Comming Soon...'
+  },
+]
