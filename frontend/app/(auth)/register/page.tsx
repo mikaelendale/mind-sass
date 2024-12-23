@@ -27,7 +27,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>
 
 const Register = () => {
   const { register: authRegister } = useAuth({
-    middleware: 'guest',
+    middleware: 'auth',
     redirectIfAuthenticated: '/dashboard',
   })
 
