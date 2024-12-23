@@ -8,7 +8,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
     const params = useParams()
 
-    const isDev = process.env.NODE_ENV === 'development';
+    
 
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
@@ -21,11 +21,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             }),
     )
 
-    const mockUser = { id: 1, name: 'Dev User', email: 'dev@example.com' }
-
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const register = async ({ setErrors, ...props }:any) => {
+    const register = async ({ setErrors, ...props }: any) => {
         await csrf()
 
         setErrors([])
@@ -40,7 +38,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, setStatus, ...props }:any) => {
+    const login = async ({ setErrors, setStatus, ...props }: any) => {
         await csrf()
 
         setErrors([])
@@ -56,7 +54,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const forgotPassword = async ({ setErrors, setStatus, email }:any) => {
+    const forgotPassword = async ({ setErrors, setStatus, email }: any) => {
         await csrf()
 
         setErrors([])
@@ -72,7 +70,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resetPassword = async ({ setErrors, setStatus, ...props }:any) => {
+    const resetPassword = async ({ setErrors, setStatus, ...props }: any) => {
         await csrf()
 
         setErrors([])
@@ -90,7 +88,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resendEmailVerification = ({ setStatus }:any) => {
+    const resendEmailVerification = ({ setStatus }: any) => {
         axios
             .post('/email/verification-notification')
             .then(response => setStatus(response.data.status))
@@ -105,22 +103,25 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && (isDev ? mockUser : user))
+        if (middleware === 'guest' && redirectIfAuthenticated && user) {
             router.push(redirectIfAuthenticated)
+        }
 
-        if (middleware === 'auth' && !isDev && !user?.email_verified_at)
-            router.push('/verify-email')
-        
-        if (
-            window.location.pathname === '/verify-email' &&
-            (isDev ? mockUser.email_verified_at : user?.email_verified_at)
-        )
-            router.push(redirectIfAuthenticated)
-        if (middleware === 'auth' && error) logout()
+        if (middleware === 'auth' && !user) {
+            router.push('/login') // Redirect to login if user is not authenticated
+        }
+
+        if (middleware === 'auth' && user?.email_verified_at === null) {
+            router.push('/verify-email') // Redirect to verify email if not verified
+        }
+
+        if (middleware === 'auth' && error) {
+            logout() // Logout if there is an error
+        }
     }, [user, error])
 
     return {
-        user: isDev ? mockUser : user,
+        user,
         register,
         login,
         forgotPassword,
