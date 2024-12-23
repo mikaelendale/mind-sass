@@ -68,7 +68,7 @@ const Login = () => {
             {/* Email Address */}
             <div className='mt-[-3rem] gap-3 flex flex-col'>
               <Label htmlFor="email" >Email</Label>
-              <Input
+              <Input 
                 id="email"
                 type="email"
                 className="block mt-1 w-full px-3 py-2 bg-black text-white rounded-sm"
