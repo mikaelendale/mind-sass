@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect } from 'react'
@@ -7,8 +6,6 @@ import { useParams, useRouter } from 'next/navigation'
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
     const params = useParams()
-
-    
 
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
@@ -23,7 +20,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const register = async ({ setErrors, ...props }: any) => {
+    const register = async ({ setErrors, ...props }) => {
         await csrf()
 
         setErrors([])
@@ -38,7 +35,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, setStatus, ...props }: any) => {
+    const login = async ({ setErrors, setStatus, ...props }) => {
         await csrf()
 
         setErrors([])
@@ -54,7 +51,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const forgotPassword = async ({ setErrors, setStatus, email }: any) => {
+    const forgotPassword = async ({ setErrors, setStatus, email }) => {
         await csrf()
 
         setErrors([])
@@ -70,7 +67,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resetPassword = async ({ setErrors, setStatus, ...props }: any) => {
+    const resetPassword = async ({ setErrors, setStatus, ...props }) => {
         await csrf()
 
         setErrors([])
@@ -88,7 +85,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resendEmailVerification = ({ setStatus }: any) => {
+    const resendEmailVerification = ({ setStatus }) => {
         axios
             .post('/email/verification-notification')
             .then(response => setStatus(response.data.status))
@@ -103,21 +100,18 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user) {
+        if (middleware === 'guest' && redirectIfAuthenticated && user)
             router.push(redirectIfAuthenticated)
-        }
 
-        if (middleware === 'auth' && !user) {
-            router.push('/login') // Redirect to login if user is not authenticated
-        }
-
-        if (middleware === 'auth' && user?.email_verified_at === null) {
-            router.push('/verify-email') // Redirect to verify email if not verified
-        }
-
-        if (middleware === 'auth' && error) {
-            logout() // Logout if there is an error
-        }
+        if (middleware === 'auth' && !user?.email_verified_at)
+            router.push('/verify-email')
+        
+        if (
+            window.location.pathname === '/verify-email' &&
+            user?.email_verified_at
+        )
+            router.push(redirectIfAuthenticated)
+        if (middleware === 'auth' && error) logout()
     }, [user, error])
 
     return {

@@ -15,13 +15,14 @@ const registerSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
-  passwordConfirmation: z
-    .string()
-    .min(6, 'Password confirmation must be at least 6 characters long'),
-}).refine(data => data.password === data.passwordConfirmation, {
-  message: 'Passwords do not match',
-  path: ['passwordConfirmation'],
+  // passwordConfirmation: z
+  //   .string()
+  //   .min(6, 'Password confirmation must be at least 6 characters long'),
 })
+  // .refine(data => data.password === data.passwordConfirmation, {
+  // message: 'Passwords do not match',
+  // path: ['passwordConfirmation'],
+// })
 
 type RegisterFormValues = z.infer<typeof registerSchema>
 
@@ -44,9 +45,10 @@ const Register = () => {
       name: data.name,
       email: data.email,
       password: data.password,
-      password_confirmation: data.passwordConfirmation,
+      // password_confirmation: data.passwordConfirmation,
       setErrors: () => {},
     })
+    console.log(data);
   }
 
   return (
